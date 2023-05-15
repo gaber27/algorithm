@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Problem</title>
+    <link rel="stylesheet" href="css/prism.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    /> -->
+    <link rel="stylesheet" href="css/all.css">
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="./assets/logo.png" alt="logo" />
+      </div>
+    </header>
+
+    <hr />
+
+    <!-- <label class="switch">
+      <input type="checkbox" id="toggleSwitch">
+      <span class="slider round"></span>
+    </label> -->
+
+    <div class="tabs">
+      <button class="tablinks active" onclick="openTab(event, 'tab1')">Question 1</button>
+      <button class="tablinks" onclick="openTab(event, 'tab2')">Question 2</button>
+    </div>
+    
+    
+    
+    <div id="tab1" class="tabcontent active">
+      <section class="explane">
+        <div class="title">
+          <img src="./assets/bg.png" alt="background" />
+          <h1><span>Explain</span> the problem</h1>
+        </div>
+        <p id="ex"></p>
+      </section>
+      
+      <section class="steps">
+        <div class="title">
+          <img src="./assets/bg.png" alt="background" />
+          <h1><span>Steps</span> of solution</h1>
+        </div>
+      
+        <div class="step-container">
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-description"></div>
+            </div>
+            <div class="step-IO">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-description"></div>
+            </div>
+            <div class="step-IO">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-description"></div>
+            </div>
+            <div class="step-IO">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-description"></div>
+            </div>
+            <div class="step-IO">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number">5</div>
+              <div class="step-description"></div>
+            </div>
+            <div class="step-IO">
+              <ul></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="code">
+        <div class="title">
+          <img src="./assets/bg.png" alt="background" />
+          <h1><span>Code</span></h1>
+        </div>
+        <div class="compiler">
+          <div class="btns">
+            <button value="dart" class="langs">
+              <img
+                src="/assets/687474703a2f2f692e696d6775722e636f6d2f68746a5264426b2e706e67.png"
+                alt=""
+              />
+            </button>
+            <button value="python" class="langs">
+              <i class="fa-brands fa-python"></i>
+            </button>
+            <button value="java" class="langs">
+              <i class="fa-brands fa-java"></i>
+            </button>
+            <button value="cpp" class="langs">
+              <img src="/assets/plus_logo_c_icon_214621.png" alt="" />
+            </button>
+            <button value="js" class="langs">
+              <i class="fa-brands fa-square-js"></i>
+            </button>
+            <button value="php" class="langs">
+              <i class="fa-brands fa-php"></i>
+            </button>
+          </div>
+          <div class="compilar_containar">
+            <div class="input">
+              <div class="head">
+                <h3 class="compilar_title_lang"></h3>
+                <button class="run">Run</button>
+              </div>
+              <div id="python-code" class="code-snippet">
+                <pre><code class="python-code language-python"></code></pre>
+              </div>
+              <div id="dart-code" class="code-snippet">
+                <pre><code class="dart-code language-dart"></code></pre>
+              </div>
+              <div id="java-code" class="code-snippet">
+                <pre><code class="java-code language-java"></code></pre>
+              </div>
+              <div id="cpp-code" class="code-snippet">
+                <pre><code class="cpp-code language-cpp"></code></pre>
+              </div>
+              <div id="js-code" class="code-snippet">
+                <pre><code class="js-code language-javascript"></code></pre>
+              </div>
+              <div id="php-code" class="code-snippet">
+                <pre><code class="php-code language-php"></code></pre>
+              </div>
+              <!-- <pre><code class="language-javascript">print()</code></pre> -->
+            </div>
+            <div class="output">
+              <div class="head">
+                <h3 class="compilar_title">Output</h3>
+              </div>
+              <textarea readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+
+    <div id="tab2" class="tabcontent">
+      <section class="explane">
+        <div class="title">
+          <img src="./assets/bg2.jpg" alt="background" />
+          <h1><span>Explain</span> the problem</h1>
+        </div>
+        <p id="ex2"></p>
+      </section>
+      
+      <section class="steps">
+        <div class="title">
+          <img src="./assets/bg2.jpg" alt="background" />
+          <h1><span>Steps</span> of solution</h1>
+        </div>
+      
+        <div class="step-container">
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number2">1</div>
+              <div class="step-description2"></div>
+            </div>
+            <div class="step-IO2">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number2">2</div>
+              <div class="step-description2"></div>
+            </div>
+            <div class="step-IO2">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number2">3</div>
+              <div class="step-description2"></div>
+            </div>
+            <div class="step-IO2">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number2">4</div>
+              <div class="step-description2"></div>
+            </div>
+            <div class="step-IO2">
+              <ul></ul>
+            </div>
+          </div>
+          <div class="all-step">
+            <div class="step">
+              <div class="step-number2">5</div>
+              <div class="step-description2"></div>
+            </div>
+            <div class="step-IO2">
+              <ul></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="code">
+        <div class="title">
+          <img src="./assets/bg2.jpg" alt="background" />
+          <h1><span>Code</span></h1>
+        </div>
+        <div class="compiler">
+          <div class="btns">
+            <button value="dart" class="langs2">
+              <img
+                src="/assets/687474703a2f2f692e696d6775722e636f6d2f68746a5264426b2e706e67.png"
+                alt=""
+              />
+            </button>
+            <button value="python" class="langs2">
+              <i class="fa-brands fa-python"></i>
+            </button>
+            <button value="java" class="langs2">
+              <i class="fa-brands fa-java"></i>
+            </button>
+            <button value="cpp" class="langs2">
+              <img src="/assets/plus_logo_c_icon_214621.png" alt="" />
+            </button>
+            <button value="js" class="langs2">
+              <i class="fa-brands fa-square-js"></i>
+            </button>
+            <button value="php" class="langs2">
+              <i class="fa-brands fa-php"></i>
+            </button>
+          </div>
+          <div class="compilar_containar">
+            <div class="input">
+              <div class="head">
+                <h3 class="compilar_title_lang"></h3>
+                <button class="run2">Run</button>
+              </div>
+              <div id="python-code" class="code-snippet2">
+                <pre><code class="python-code2 language-python"></code></pre>
+              </div>
+              <div id="dart-code" class="code-snippet2">
+                <pre><code class="dart-code2 language-dart"></code></pre>
+              </div>
+              <div id="java-code" class="code-snippet2">
+                <pre><code class="java-code2 language-java"></code></pre>
+              </div>
+              <div id="cpp-code" class="code-snippet2">
+                <pre><code class="cpp-code2 language-cpp"></code></pre>
+              </div>
+              <div id="js-code" class="code-snippet2">
+                <pre><code class="js-code2 language-javascript"></code></pre>
+              </div>
+              <div id="php-code" class="code-snippet2">
+                <pre><code class="php-code2 language-php"></code></pre>
+              </div>
+            </div>
+            <div class="output">
+              <div class="head">
+                <h3 class="compilar_title">Output</h3>
+              </div>
+              <textarea readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    </div>
+    <div class="footer">
+      <h4>© 2023 Algo</h4>
+    </div>
+
+
+
+    <script src="js/all.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/prism.js"></script>
+  </body>
+</html>
