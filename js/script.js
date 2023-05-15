@@ -502,5 +502,5 @@ for (let i = 0; i < codeEl2.length; i++) {
 }
 
 document.querySelector(".run2").addEventListener("click", () => {
-  textareaEl[1].textContent = `The maximum profit that can be earned by selecting a subset of non-overlapping jobs from the given jobs list : 11`;
+  textareaEl[1].textContent = `The maximum profit that can be earned by selecting a subset of non-overlapping jobs from the given jobs list : 10`;
 });
