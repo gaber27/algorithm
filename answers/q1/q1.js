@@ -1,34 +1,29 @@
-class Job {
-  constructor(id, deadline, profit) {
-    this.id = id;
-    this.deadline = deadline;
-    this.profit = profit;
+/*
+- Create By Gaber Tarek
+- 15/5/2023 
+
+
+*/
+
+function max_Profit(jobs) {
+  jobs.sort((x, y) => y[2] - x[2]); 
+  let number_Jobs = jobs.length;
+  let max_Profit = 0; 
+  let max_Jobs_Done = 0; 
+  let schedule = new Array(number_Jobs).fill(false); 
+  for (let j = 0; j < number_Jobs; j++) {
+      let latestAvailableSlot = Math.min(number_Jobs, jobs[j][1]) - 1;
+      while (latestAvailableSlot >= 0 && schedule[latestAvailableSlot]) {
+          latestAvailableSlot--;
+      }
+      if (latestAvailableSlot >= 0) {
+      schedule[latestAvailableSlot] = true;
+      max_Profit += jobs[j][2];
+      max_Jobs_Done++;
+      }
   }
-}
-
-function maxProfit(jobs) {
-  // sort jobs in descending order of profit
-  jobs.sort((a, b) => b.profit - a.profit);
-
-  let n = jobs.length;
-  let maxDeadline = Math.max(...jobs.map(j => j.deadline));
-  let slot = new Array(maxDeadline).fill(false);
-
-  let count = 0, profit = 0;
-  for (let i = 0; i < n; i++) {
-    let j = jobs[i].deadline - 1;
-    while (j >= 0 && slot[j]) j--; // find first available slot
-    if (j >= 0) {
-      slot[j] = true; // mark slot as occupied
-      count++;
-      profit += jobs[i].profit;
-    }
+  return [max_Jobs_Done, max_Profit];
   }
-
-  return { count, profit };
-}
-
-let jobs = [new Job(1, 4, 20), new Job(2, 1, 10), new Job(3, 1, 40), new Job(4, 1, 30)];
-let { count, profit } = maxProfit(jobs);
-console.log(`Number of jobs done: ${count}`);
-console.log(`Maximum profit: ${profit}`);
+  const Jobs = [[1,4,20],[2,1,10],[3,1,40],[4,1,30]]
+  const [jobsDone, totalProfit] = max_Profit(Jobs);
+  console.log(jobsDone,totalProfit)

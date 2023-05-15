@@ -145,247 +145,160 @@ buttons.forEach((btn) => {
 });
 
 const codes = {
-  cpp :`#include <iostream>
-  #include <vector>
-  #include <algorithm>
-  using namespace std;
-  
-  struct Job {
-      int id;
-      int deadline;
-      int profit;
-  };
-  
-  bool compareJobs(const Job& a, const Job& b) {
-      return a.profit > b.profit;
-  }
-  
-  vector<int> maxProfit(const vector<Job>& jobs) {
-      // sort jobs in descending order of profit
-      vector<Job> sortedJobs = jobs;
-      sort(sortedJobs.begin(), sortedJobs.end(), compareJobs);
-      
-      int n = jobs.size();
-      int maxDeadline = 0;
-      for (int i = 0; i < n; i++) {
-          maxDeadline = max(maxDeadline, jobs[i].deadline);
+  dart: `List<int> maxProfit(List<List<int>> jobs) {
+    jobs.sort((a, b) => b[2] - a[2]); // Sort by profit
+    int numJobs = jobs.length; // number of jobs
+    int maxProfit = 0; // maximum profit
+    int maxJobsDone = 0; // maximum number of jobs done
+    List<bool> schedule = List.filled(numJobs, false); // schedule of jobs
+    for (int i = 0; i < numJobs; i++) {
+      // Find the latest slot for the job
+      int latestAvailableSlot = numJobs.clamp(0, jobs[i][1]) - 1;
+      while (latestAvailableSlot >= 0 && schedule[latestAvailableSlot]) {
+        latestAvailableSlot--;
       }
-      vector<bool> slot(maxDeadline, false);
-  
-      int count = 0;
-      int profit = 0;
-      for (int i = 0; i < n; i++) {
-          int j = jobs[i].deadline - 1;
-          while (j >= 0 && slot[j]) {
-              j--; // find first available slot
-          }
-          if (j >= 0) {
-              slot[j] = true; // mark slot as occupied
-              count++;
-              profit += jobs[i].profit;
-          }
-      }
-  
-      return {count, profit};
-  }
-  
-  int main() {
-      vector<Job> jobs = {
-          {1, 4, 20},
-          {2, 1, 10},
-          {3, 1, 40},
-          {4, 1, 30}
-      };
-      vector<int> result = maxProfit(jobs);
-      cout << "Number of jobs done: " << result[0] << endl;
-      cout << "Maximum profit: " << result[1] << endl;
-      return 0;
-  }
-  `,
-  dart : `int maxProfit(List<List<int>> jobs) {
-    int len = jobs.length;
-    jobs.sort((a, b) => a[1] - b[1]);
-    List<int> table = List<int>.filled(len + 1, 0);
-    
-    for (int j = 1; j <= len; j++) {
-      int i = j - 1;
-      while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
-        i--;
-      }
-      table[j] = jobs[j - 1][2] + (i >= 0 ? table[i + 1] : 0);
-      table[j] = table[j] > table[j - 1] ? table[j] : table[j - 1];
-    }
-    
-    return table[len];
-  }
-  
-  void main() {
-    List<List<int>> jobs = [
-      [1, 6, 6],
-      [2, 5, 5],
-      [5, 7, 5],
-      [6, 8, 3]
-    ];
-    
-    print(maxProfit(jobs));
-  }`,
-  java : `import java.util.*;
-
-  class Job {
-      int id;
-      int deadline;
-      int profit;
-  
-      public Job(int id, int deadline, int profit) {
-          this.id = id;
-          this.deadline = deadline;
-          this.profit = profit;
-      }
-  }
-  
-  public class JobScheduler {
-      public static void main(String[] args) {
-          List<Job> jobs = new ArrayList<>();
-          jobs.add(new Job(1, 4, 20));
-          jobs.add(new Job(2, 1, 10));
-          jobs.add(new Job(3, 1, 40));
-          jobs.add(new Job(4, 1, 30));
-  
-          int[] result = scheduleJobs(jobs);
-          System.out.println("Number of jobs done: " + result[0]);
-          System.out.println("Maximum profit: " + result[1]);
-      }
-  
-      public static int[] scheduleJobs(List<Job> jobs) {
-          // sort jobs in descending order of profit
-          Collections.sort(jobs, (a, b) -> b.profit - a.profit);
-  
-          int n = jobs.size();
-          int maxDeadline = Collections.max(jobs, (a, b) -> a.deadline - b.deadline).deadline;
-          boolean[] slot = new boolean[maxDeadline];
-  
-          int count = 0, profit = 0;
-          for (int i = 0; i < n; i++) {
-              int j = jobs.get(i).deadline - 1;
-              while (j >= 0 && slot[j]) {
-                  j--; // find first available slot
-              }
-              if (j >= 0) {
-                  slot[j] = true; // mark slot as occupied
-                  count++;
-                  profit += jobs.get(i).profit;
-              }
-          }
-  
-          return new int[]{count, profit};
-      }
-  }`,
-  js : `class Job {
-    constructor(id, deadline, profit) {
-      this.id = id;
-      this.deadline = deadline;
-      this.profit = profit;
-    }
-  }
-  
-  function maxProfit(jobs) {
-    // sort jobs in descending order of profit
-    jobs.sort((a, b) => b.profit - a.profit);
-  
-    let n = jobs.length;
-    let maxDeadline = Math.max(...jobs.map(j => j.deadline));
-    let slot = new Array(maxDeadline).fill(false);
-  
-    let count = 0, profit = 0;
-    for (let i = 0; i < n; i++) {
-      let j = jobs[i].deadline - 1;
-      while (j >= 0 && slot[j]) j--; // find first available slot
-      if (j >= 0) {
-        slot[j] = true; // mark slot as occupied
-        count++;
-        profit += jobs[i].profit;
+      if (latestAvailableSlot >= 0) {
+        // Schedule the job in the available slot
+        schedule[latestAvailableSlot] = true;
+        maxProfit += jobs[i][2];
+        maxJobsDone++;
       }
     }
-  
-    return { count, profit };
+    return [maxJobsDone, maxProfit];
   }
-  
-  let jobs = [new Job(1, 4, 20), new Job(2, 1, 10), new Job(3, 1, 40), new Job(4, 1, 30)];
-  let { count, profit } = maxProfit(jobs);
-  console.log(\`Number of jobs done: ${count}\`);
-  console.log(\`Maximum profit: ${profit}\`);`,
-  php : `class Job {
-    public $id;
-    public $deadline;
-    public $profit;
+  var jobs = [[1,4,20],[2,1,10],[3,1,40],[4,1,30]];
+var result = maxProfit(jobs);
+var jobsDone = result[0];
+var totalProfit = result[1];
+`,
+  python: `def max_profit(jobs):
+  jobs.sort(key=lambda x: x[2], reverse=True) # Sort by profit
+  num_jobs = len(jobs) # number of jobs
+  max_profit = 0 # maximum profit
+  max_jobs_done = 0 # maximum number of jobs done
+  schedule = [False] * num_jobs # schedule of jobs
+  for i in range(num_jobs):
+      latest_available_slot = min(num_jobs, jobs[i][1]) - 1 # Find the latest slot for the job
+      while latest_available_slot >= 0 and schedule[latest_available_slot]:
+          latest_available_slot -= 1
+      if latest_available_slot >= 0:
+          schedule[latest_available_slot] = True # Schedule the job in the available slot
+          max_profit += jobs[i][2]
+          max_jobs_done += 1
+  return [max_jobs_done, max_profit]
+  jobs = [[1,4,20],[2,1,10],[3,1,40],[4,1,30]]
+jobs_done, total_profit = max_profit(jobs)
+`,
+  java: `public static int[] findMaxProfitJobs(int[][] jobs) {
+    // Sort jobs in decreasing order of profit
+    Arrays.sort(jobs, (a, b) -> b[2] - a[2]);
 
-    public function __construct($id, $deadline, $profit) {
-        $this->id = $id;
-        $this->deadline = $deadline;
-        $this->profit = $profit;
-    }
-}
+    int n = jobs.length;
+    int maxProfit = 0;
+    int maxJobsDone = 0;
+    boolean[] schedule = new boolean[n];
 
-function maxProfit($jobs) {
-    // sort jobs in descending order of profit
-    usort($jobs, function($a, $b) {
-        return $b->profit - $a->profit;
-    });
-
-    $n = count($jobs);
-    $maxDeadline = max(array_map(function($j) {
-        return $j->deadline;
-    }, $jobs));
-    $slot = array_fill(0, $maxDeadline, false);
-
-    $count = 0;
-    $profit = 0;
-    for ($i = 0; $i < $n; $i++) {
-        $j = $jobs[$i]->deadline - 1;
-        while ($j >= 0 && $slot[$j]) {
-            $j--; // find first available slot
+    for (int i = 0; i < n; i++) {
+        // Find the latest available slot for the current job
+        int slot = Math.min(n, jobs[i][1]) - 1;
+        while (slot >= 0 && schedule[slot]) {
+            slot--;
         }
-        if ($j >= 0) {
-            $slot[$j] = true; // mark slot as occupied
-            $count++;
-            $profit += $jobs[$i]->profit;
+
+        if (slot >= 0) {
+            // Schedule the job in the available slot
+            schedule[slot] = true;
+            maxProfit += jobs[i][2];
+            maxJobsDone++;
         }
     }
 
-    return [$count, $profit];
-}
+    return new int[] {maxJobsDone, maxProfit};
+}`,
+  cpp: `#include <vector>
+#include <algorithm>
+using namespace std;
 
-$jobs = [
-    new Job(1, 4, 20),
-    new Job(2, 1, 10),
-    new Job(3, 1, 40),
-    new Job(4, 1, 30)
-];
+vector<int> maxProfit(vector<vector<int>> jobs) {
+  sort(jobs.begin(), jobs.end(), [](vector<int> a, vector<int> b) { return b[2] < a[2]; }); // Sort by profit
+  int numJobs = jobs.size(); // number of jobs
+  int maxProfit = 0; // maximum profit
+  int maxJobsDone = 0; // maximum number of jobs done
+  vector<bool> schedule(numJobs, false); // schedule of jobs
+  for (int i = 0; i < numJobs; i++) {
+    int latestAvailableSlot = min(numJobs, jobs[i][1]) - 1; // Find the latest slot for the job
+    while (latestAvailableSlot >= 0 && schedule[latestAvailableSlot]) {
+      latestAvailableSlot--;
+    }
+    if (latestAvailableSlot >= 0) {
+      schedule[latestAvailableSlot] = true; // Schedule the job in the available slot
+      maxProfit += jobs[i][2];
+      maxJobsDone++;
+    }
+  }
+  return {maxJobsDone, maxProfit};
+}
+vector<vector<int>> jobs = {{1,4,20},{2,1,10},{3,1,40},{4,1,30}};
+auto result = maxProfit(jobs);
+auto jobsDone = result[0];
+auto totalProfit = result[1];
+`,
+  js: `function maxProfit(jobs) {
+  jobs.sort((a, b) => b[2] - a[2]);  // Sort by profit
+  let numJobs = jobs.length; // number of jobs
+  let maxProfit = 0; // maximum profit
+  let maxJobsDone = 0; // maximum number of jobs done
+  let schedule = new Array(numJobs).fill(false); // schedule of jobs
+  for (let i = 0; i < numJobs; i++) {
+    // Find the latest slot for the job
+    let latestAvailableSlot = Math.min(numJobs, jobs[i][1]) - 1;
+    while (latestAvailableSlot >= 0 && schedule[latestAvailableSlot]) {
+      latestAvailableSlot--;
+    }
+    if (latestAvailableSlot >= 0) {
+      // Schedule the job in the available slot
+      schedule[latestAvailableSlot] = true;
+      maxProfit += jobs[i][2];
+      maxJobsDone++;
+    }
+  }
+  return [maxJobsDone, maxProfit];
+}
+const Jobs = [[1,4,20],[2,1,10],[3,1,40],[4,1,30]]
+  const [jobsDone, totalProfit] = maxProfit(Jobs);`,
+  php: `function findMaxProfitJobs($jobs) {
+  // Sort jobs in decreasing order of profit
+  usort($jobs, function($a, $b) {
+      return $b[2] - $a[2];
+  });
+
+  $n = count($jobs);
+  $maxProfit = 0;
+  $maxJobsDone = 0;
+  $schedule = array_fill(0, $n, false);
+
+  for ($i = 0; $i < $n; $i++) {
+      // Find the latest available slot for the current job
+      $slot = min($n, $jobs[$i][1]) - 1;
+      while ($slot >= 0 && $schedule[$slot]) {
+          $slot--;
+      }
+
+      if ($slot >= 0) {
+          // Schedule the job in the available slot
+          $schedule[$slot] = true;
+          $maxProfit += $jobs[$i][2];
+          $maxJobsDone++;
+      }
+  }
+
+  return [$maxJobsDone, $maxProfit];
+}
+$jobs = array(array(1,4,20), array(2,1,10), array(3,1,40), array(4,1,30));
 $result = maxProfit($jobs);
-echo "Number of jobs done: " . $result[0] . "\n";
-echo "Maximum profit: " . $result[1] . "\n";`,
-python : `def max_profit(jobs):
-jobs.sort(key=lambda x: x[1])
-length = len(jobs)
-table = [0] * (length + 1)
-
-for j in range(1, length + 1):
-    i = j - 1
-    while i >= 0 and jobs[i][1] > jobs[j - 1][0]:
-        i -= 1
-    table[j] = jobs[j - 1][2] + table[i + 1] if i >= 0 else 0
-    table[j] = max(table[j], table[j - 1])
-
-return table[length]
-
-jobs = [
-[1, 6, 6],
-[2, 5, 5],
-[5, 7, 5],
-[6, 8, 3]
-]
-print(max_profit(jobs))
-`
+$jobsDone = $result[0];
+$totalProfit = $result[1];
+`,
 };
 
 const codeEl = document.querySelectorAll(".code-snippet code");
@@ -418,194 +331,72 @@ buttons2.forEach((btn) => {
 });
 
 const codes2 = {
-  dart: `class Job {
-    int id, deadline, profit;
-    Job(this.id, this.deadline, this.profit);
-  }
+  dart: `int maxProfit(List<List<int>> jobs) {
+    int N = jobs.length;
+    jobs.sort((a, b) => a[1].compareTo(b[1]));
+    List<int> dp = List.filled(N + 1, 0);
   
-  int maxProfit(List<Job> jobs) {
-    // sort jobs in descending order of profit
-    jobs.sort((a, b) => b.profit.compareTo(a.profit));
-  
-    int n = jobs.length;
-    int maxDeadline = jobs.map((j) => j.deadline).reduce((a, b) => a > b ? a : b);
-    List<bool> slot = List.filled(maxDeadline, false);
-  
-    int count = 0, profit = 0;
-    for (int i = 0; i < n; i++) {
-      int j = jobs[i].deadline - 1;
-      while (j >= 0 && slot[j]) j--; // find first available slot
-      if (j >= 0) {
-        slot[j] = true; // mark slot as occupied
-        count++;
-        profit += jobs[i].profit;
+    for (int j = 1; j <= N; j++) {
+      int i = j - 1;
+      while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
+        i--;
       }
+      dp[j] = jobs[j - 1][2] + (i >= 0 ? dp[i + 1] : 0);
+      dp[j] = dp[j] > dp[j - 1] ? dp[j] : dp[j - 1];
     }
   
-    return profit;
+    return dp[N];
   }
   
   void main() {
-    List<Job> jobs = [Job(1, 4, 20), Job(2, 1, 10), Job(3, 1, 40), Job(4, 1, 30)];
-    int count = maxProfit(jobs);
-    print("Number of jobs done: $count");
-    int profit = maxProfit(jobs);
-    print("Maximum profit: $profit");
-  }
-  `,
-  python: `class Job:
-  def __init__(self, id, deadline, profit):
-      self.id = id
-      self.deadline = deadline
-      self.profit = profit
-
-def max_profit(jobs):
-  # sort jobs in descending order of profit
-  jobs.sort(key=lambda j: j.profit, reverse=True)
-
-  n = len(jobs)
-  max_deadline = max(jobs, key=lambda j: j.deadline).deadline
-  slot = [False] * max_deadline
-
-  count = 0
-  profit = 0
-  for i in range(n):
-      j = jobs[i].deadline - 1
-      while j >= 0 and slot[j]:
-          j -= 1 # find first available slot
-      if j >= 0:
-          slot[j] = True # mark slot as occupied
-          count += 1
-          profit += jobs[i].profit
-
-  return count, profit
-
-jobs = [Job(1, 4, 20), Job(2, 1, 10), Job(3, 1, 40), Job(4, 1, 30)]
-count, profit = max_profit(jobs)
-print(f"Number of jobs done: {count}")
-print(f"Maximum profit: {profit}")
-`,
-  js: `class Job {
-    constructor(id, deadline, profit) {
-      this.id = id;
-      this.deadline = deadline;
-      this.profit = profit;
-    }
-  }
+    List<List<int>> jobs = [    [1, 6, 6],
+      [2, 5, 5],
+      [5, 7, 5],
+      [6, 8, 3]
+    ];
+    int maxProfitValue = maxProfit(jobs);
+    print(maxProfitValue);
+  }`,
+  js: `function maxProfit(jobs) {
+    const N = jobs.length;
+    jobs.sort((a, b) => a[1] - b[1]);
+    const dp = new Array(N + 1).fill(0);
   
-  function maxProfit(jobs) {
-    // sort jobs in descending order of profit
-    jobs.sort((a, b) => b.profit - a.profit);
-  
-    let n = jobs.length;
-    let maxDeadline = Math.max(...jobs.map(j => j.deadline));
-    let slot = new Array(maxDeadline).fill(false);
-  
-    let count = 0, profit = 0;
-    for (let i = 0; i < n; i++) {
-      let j = jobs[i].deadline - 1;
-      while (j >= 0 && slot[j]) j--; // find first available slot
-      if (j >= 0) {
-        slot[j] = true; // mark slot as occupied
-        count++;
-        profit += jobs[i].profit;
+    for (let j = 1; j <= N; j++) {
+      let i = j - 1;
+      while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
+        i--;
       }
+      dp[j] = jobs[j - 1][2] + (i >= 0 ? dp[i + 1] : 0);
+      dp[j] = Math.max(dp[j], dp[j - 1]);
     }
   
-    return { count, profit };
+    return dp[N];
   }
   
-  let jobs = [new Job(1, 4, 20), new Job(2, 1, 10), new Job(3, 1, 40), new Job(4, 1, 30)];
-  let { count, profit } = maxProfit(jobs);
-  console.log(\`Number of jobs done: ${count}\`);
-  console.log(\`Maximum profit: ${profit}\`);
-  `,
-  java: `package answers.q2;
-  
-  import java.util.Arrays;
-  
-  class Main {
-      public static int maxProfit(int[][] jobs) {
-          int len = jobs.length;
-          Arrays.sort(jobs, (a, b) -> a[1] - b[1]);
-          int[] table = new int[len + 1];
-  
-          for (int j = 1; j <= len; j++) {
-              int i = j - 1;
-              while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
-                  i--;
-              }
-              table[j] = jobs[j - 1][2] + (i >= 0 ? table[i + 1] : 0);
-              table[j] = Math.max(table[j], table[j - 1]);
-          }
-  
-          return table[len];
-      }
-  
-      public static void main(String[] args) {
-          int[][] jobs = {
-              {1, 6, 6},
-              {2, 5, 5},
-              {5, 7, 5},
-              {6, 8, 3}
-          };
-  
-          System.out.println(maxProfit(jobs));
-      }
-  }`,
-  cpp: `#include <iostream>
-  #include <algorithm>
-  #include <vector>
-  using namespace std;
-  
-  int maxProfit(vector<vector<int>>& jobs) {
-      int len = jobs.size();
-      sort(jobs.begin(), jobs.end(), [](const vector<int>& a, const vector<int>& b) {
-          return a[1] < b[1];
-      });
-      vector<int> table(len + 1, 0);
-  
-      for (int j = 1; j <= len; j++) {
-          int i = j - 1;
-          while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
-              i--;
-          }
-          table[j] = jobs[j - 1][2] + (i >= 0 ? table[i + 1] : 0);
-          table[j] = max(table[j], table[j - 1]);
-      }
-  
-      return table[len];
-  }
-  
-  int main() {
-      vector<vector<int>> jobs = {
-          {1, 6, 6},
-          {2, 5, 5},
-          {5, 7, 5},
-          {6, 8, 3}
-      };
-  
-      cout << maxProfit(jobs) << endl;
-  
-      return 0;
-  }`,
+  const jobs = [  [1, 6, 6],
+    [2, 5, 5],
+    [5, 7, 5],
+    [6, 8, 3]
+  ];
+  console.log(maxProfit(jobs));`,
   php: `function maxProfit($jobs) {
+    $N = count($jobs);
     usort($jobs, function($a, $b) {
-        return $a[1] - $b[1];
+      return $a[1] - $b[1];
     });
-    $len = count($jobs);
-    $table = array_fill(0, $len + 1, 0);
+    $dp = array_fill(0, $N + 1, 0);
   
-    for ($j = 1; $j <= $len; $j++) {
-        $i = $j - 1;
-        while ($i >= 0 && $jobs[$i][1] > $jobs[$j - 1][0]) {
-            $i--;
-        }
-        $table[$j] = $jobs[$j - 1][2] + ($i >= 0 ? $table[$i + 1] : 0);
-        $table[$j] = max($table[$j], $table[$j - 1]);
+    for ($j = 1; $j <= $N; $j++) {
+      $i = $j - 1;
+      while ($i >= 0 && $jobs[$i][1] > $jobs[$j - 1][0]) {
+        $i--;
+      }
+      $dp[$j] = $jobs[$j - 1][2] + ($i >= 0 ? $dp[$i + 1] : 0);
+      $dp[$j] = max($dp[$j], $dp[$j - 1]);
     }
   
-    return $table[$len];
+    return $dp[$N];
   }
   
   $jobs = [
@@ -614,8 +405,93 @@ print(f"Maximum profit: {profit}")
     [5, 7, 5],
     [6, 8, 3]
   ];
-  echo maxProfit($jobs);
-  `,
+  echo maxProfit($jobs);`,
+  python: `def max_profit(jobs):
+  N = len(jobs)
+  jobs.sort(key=lambda x: x[1])
+  dp = [0] * (N + 1)
+
+  for j in range(1, N + 1):
+      i = j - 1
+      while i >= 0 and jobs[i][1] > jobs[j - 1][0]:
+          i -= 1
+      dp[j] = jobs[j - 1][2] + dp[i + 1] if i >= 0 else jobs[j - 1][2]
+      dp[j] = max(dp[j], dp[j - 1])
+
+  return dp[N]
+
+jobs = [    [1, 6, 6],
+  [2, 5, 5],
+  [5, 7, 5],
+  [6, 8, 3]
+]
+print(max_profit(jobs))`,
+  cpp: `#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int maxProfit(vector<vector<int>>& jobs) {
+    int N = jobs.size();
+    sort(jobs.begin(), jobs.end(), [](vector<int>& a, vector<int>& b) {
+        return a[1] < b[1];
+    });
+    vector<int> dp(N + 1, 0);
+
+    for (int j = 1; j <= N; j++) {
+        int i = j - 1;
+        while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
+            i--;
+        }
+        dp[j] = jobs[j - 1][2] + (i >= 0 ? dp[i + 1] : 0);
+        dp[j] = max(dp[j], dp[j - 1]);
+    }
+
+    return dp[N];
+}
+
+int main() {
+    vector<vector<int>> jobs = {
+        {1, 6, 6},
+        {2, 5, 5},
+        {5, 7, 5},
+        {6, 8, 3}
+    };
+    cout << maxProfit(jobs);
+
+    return 0;
+}`,
+  java: `import java.util.*;
+
+class Main {
+    public static int maxProfit(int[][] jobs) {
+        int N = jobs.length;
+        Arrays.sort(jobs, Comparator.comparingInt(a -> a[1]));
+        int[] dp = new int[N + 1];
+
+        for (int j = 1; j <= N; j++) {
+            int i = j - 1;
+            while (i >= 0 && jobs[i][1] > jobs[j - 1][0]) {
+                i--;
+            }
+            dp[j] = jobs[j - 1][2] + (i >= 0 ? dp[i + 1] : 0);
+            dp[j] = Math.max(dp[j], dp[j - 1]);
+        }
+
+        return dp[N];
+    }
+
+    public static void main(String[] args) {
+        int[][] jobs = {
+            {1, 6, 6},
+            {2, 5, 5},
+            {5, 7, 5},
+            {6, 8, 3}
+        };
+        System.out.println(maxProfit(jobs));
+    }
+}`,
 };
 
 const codeEl2 = document.querySelectorAll(".code-snippet2 code");
@@ -626,6 +502,5 @@ for (let i = 0; i < codeEl2.length; i++) {
 }
 
 document.querySelector(".run2").addEventListener("click", () => {
-  textareaEl[1].textContent = `AAAAMaximum number of jobs done: 2
-Maximum profit: 60`;
+  textareaEl[1].textContent = `The maximum profit that can be earned by selecting a subset of non-overlapping jobs from the given jobs list : 11`;
 });
